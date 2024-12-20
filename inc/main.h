@@ -7,4 +7,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+#include <stdint.h>
+#include "../inc/packet.h"
+
 #endif

@@ -4,6 +4,8 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+#define MAX_SIZE_BUFFER 48
+
 int main(void){
     int socket_desc;
     struct sockaddr_in server_addr, client_addr;
