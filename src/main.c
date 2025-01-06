@@ -1,7 +1,7 @@
 #include "../inc/main.h"
 #define PORT 5000
 // #define PORT 123
-#define MAX_SIZE_BUFFER 100
+#define MAX_SIZE_BUFFER 48
 #define TIMEOUT 20
 
 int main(int argc, char *argv[]) {
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     addr_server.sin_addr.s_addr = inet_addr(argv[1]);
 
     // Stringificando o Pacote
-    juntate_sntp_packet(&packet, buffer);
+    juntate_sntp_packet(&packet, buffer, MAX_SIZE_BUFFER);
     // buffer[0] = packet.li_vn_mode; 
     // buffer[1] = 0x53;
     // buffer[2] = 0x46;

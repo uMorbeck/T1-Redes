@@ -15,66 +15,66 @@ void print_ntp_time(ntp_packet *packet) {
     printf("Data/hora: %s", asctime(time_info));
 }
 
-void juntate_sntp_packet(ntp_packet *packet, char *buffer) {
+void juntate_sntp_packet(ntp_packet *packet, char *buffer, size_t buffer_size) {    
     char temp[50]; // Buffer temporário para conversão
 
-    // Concatenar `li_vn_mode`
-    sprintf(temp, "%02X ", packet->li_vn_mode); // Converte para string hexadecimal
-    strcat(buffer, temp);
+    // Concatenar `li_vn_mode` sem espaços
+    snprintf(temp, sizeof(temp), "%02X", packet->li_vn_mode);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `stratum`
-    sprintf(temp, "%02X ", packet->stratum);
-    strcat(buffer, temp);
+    // Concatenar `stratum` sem espaços
+    snprintf(temp, sizeof(temp), "%02X", packet->stratum);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `poll`
-    sprintf(temp, "%02X ", packet->poll);
-    strcat(buffer, temp);
+    // Concatenar `poll` sem espaços
+    snprintf(temp, sizeof(temp), "%02X", packet->poll);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `precision`
-    sprintf(temp, "%02X ", packet->precision);
-    strcat(buffer, temp);
+    // Concatenar `precision` sem espaços
+    snprintf(temp, sizeof(temp), "%02X", packet->precision);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `rootDelay`
-    sprintf(temp, "%08X ", packet->rootDelay); // Converte `uint32_t` para string hexadecimal
-    strcat(buffer, temp);
+    // Concatenar `rootDelay` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->rootDelay);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `rootDispersion`
-    sprintf(temp, "%08X ", packet->rootDispersion);
-    strcat(buffer, temp);
+    // Concatenar `rootDispersion` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->rootDispersion);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `refId`
-    sprintf(temp, "%08X ", packet->refId);
-    strcat(buffer, temp);
+    // Concatenar `refId` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->refId);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `refTm_s`
-    sprintf(temp, "%08X ", packet->refTm_s);
-    strcat(buffer, temp);
+    // Concatenar `refTm_s` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->refTm_s);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `refTm_f`
-    sprintf(temp, "%08X ", packet->refTm_f);
-    strcat(buffer, temp);
+    // Concatenar `refTm_f` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->refTm_f);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `origTm_s`
-    sprintf(temp, "%08X ", packet->origTm_s);
-    strcat(buffer, temp);
+    // Concatenar `origTm_s` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->origTm_s);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `origTm_f`
-    sprintf(temp, "%08X ", packet->origTm_f);
-    strcat(buffer, temp);
+    // Concatenar `origTm_f` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->origTm_f);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `rxTm_s`
-    sprintf(temp, "%08X ", packet->rxTm_s);
-    strcat(buffer, temp);
+    // Concatenar `rxTm_s` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->rxTm_s);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `rxTm_f`
-    sprintf(temp, "%08X ", packet->rxTm_f);
-    strcat(buffer, temp);
+    // Concatenar `rxTm_f` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->rxTm_f);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `txTm_s`
-    sprintf(temp, "%08X ", packet->txTm_s);
-    strcat(buffer, temp);
+    // Concatenar `txTm_s` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->txTm_s);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 
-    // Concatenar `txTm_f`
-    sprintf(temp, "%08X ", packet->txTm_f);
-    strcat(buffer, temp);
+    // Concatenar `txTm_f` sem espaços
+    snprintf(temp, sizeof(temp), "%08X", packet->txTm_f);
+    strncat(buffer, temp, buffer_size - strlen(buffer) - 1);
 }

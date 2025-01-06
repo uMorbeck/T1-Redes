@@ -27,6 +27,6 @@ typedef struct {
 
 void print_ntp_time(ntp_packet *packet);
 // void serialize_ntp_packet(ntp_packet *packet, uint8_t *buffer);
-void juntate_sntp_packet(ntp_packet *packet, char *buffer);
+void juntate_sntp_packet(ntp_packet *packet, char *buffer, size_t buffer_size);
 
 #endif
