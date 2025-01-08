@@ -1,6 +1,5 @@
 #include "../inc/main.h"
-#define PORT 5000
-// #define PORT 123
+#define PORT 123
 #define MAX_SIZE_BUFFER 48
 #define TIMEOUT 20
 
@@ -14,8 +13,6 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in addr_server;
     socklen_t struct_addrlen = sizeof(addr_server);
     char buffer[MAX_SIZE_BUFFER] = {0};
-
-    memset(buffer, '\0', sizeof(buffer));
 
     // Inicializa o pacote NTP
     ntp_packet packet = {0};
@@ -36,10 +33,7 @@ int main(int argc, char *argv[]) {
     addr_server.sin_addr.s_addr = inet_addr(argv[1]);
 
     // Stringificando o Pacote
-    juntate_sntp_packet(&packet, buffer, MAX_SIZE_BUFFER);
-    // buffer[0] = packet.li_vn_mode; 
-    // buffer[1] = 0x53;
-    // buffer[2] = 0x46;
+    juntate_sntp_packet(&packet, buffer);
 
     // Envia para o servidor
     if (sendto(socket_client, buffer, MAX_SIZE_BUFFER, 0, (struct sockaddr*) &addr_server, struct_addrlen) < 0) {
@@ -50,20 +44,22 @@ int main(int argc, char *argv[]) {
     memset(buffer, '\0', sizeof(buffer));
 
     // Recebe a resposta do servidor
-    if (recvfrom(socket_client, buffer, sizeof(buffer), 0, (struct sockaddr*) &addr_server, &struct_addrlen) < 0){
+    int bytes_recebidos = recvfrom(socket_client, buffer, sizeof(buffer), 0, (struct sockaddr*) &addr_server, &struct_addrlen);
+    if (bytes_recebidos < 0){
         printf("Erro ao receber resposta do Servidor\n");
         return -1;
     }
     
-    printf("Resposta do Servidor: %s\n", buffer);
+    printf("Resposta do Servidor:\n");
+    for (int i = 0; i < bytes_recebidos; i++) {
+        printf("%02X ", (unsigned char) buffer[i]);
+    }
+    printf("\n");
 
     // Exibe a data/hora
     // print_ntp_time(&packet);
     
     // Fechar o socket
     close(socket_client);
-
-    // printf("IP = %s\nPort = %d\n", argv[1], PORT);
-
     return 0;
 }
