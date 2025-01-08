@@ -1,6 +1,4 @@
 #include "../inc/packet.h"
-#include <stdio.h>
-#include <time.h>
 
 // Converts and show the time, based on the transmitted timestam (txTm_s) in the packet
 void print_ntp_time(ntp_packet *packet) {
@@ -31,6 +29,7 @@ void juntate_sntp_packet(ntp_packet *packet, char *buffer) {
 
     // Offset para as variáveis de 1 byte
     int offset = 4;
+
     // Escrevendo as variáveis de 4 bytes
     for (int i = 0; i < 11; i++) {
         buffer[offset++] = (*campos[i] >> 24) & 0xff;
@@ -39,4 +38,32 @@ void juntate_sntp_packet(ntp_packet *packet, char *buffer) {
         buffer[offset++] = *campos[i] & 0xff;
     }
 
+}
+
+void unjuntate_sntp_packet(ntp_packet *packet, char *buffer) {
+    // Escrevendo as variáveis de 1 byte
+    packet->li_vn_mode = (unsigned char) buffer[0];
+    packet->stratum = (unsigned char) buffer[1]; 
+    packet->poll = (unsigned char) buffer[2]; 
+    packet->precision = (unsigned char) buffer[3];
+
+    // Campos do pacote
+    uint32_t *campos[] = {
+        &packet->rootDelay, &packet->rootDispersion, &packet->refId,
+        &packet->refTm_s, &packet->refTm_f, &packet->origTm_s,
+        &packet->origTm_f, &packet->rxTm_s, &packet->rxTm_f,
+        &packet->txTm_s, &packet->txTm_f
+    };
+
+    // Offset para as variáveis de 1 byte
+    int offset = 4;
+
+    // Escrevendo as variáveis de 4 bytes
+    for (int i = 0; i < 11; i++) {
+        *campos[i] = ((u_int32_t)(unsigned char) buffer[offset] << 24) | 
+                    ((u_int32_t)(unsigned char) buffer[offset + 1] << 16) |
+                    ((u_int32_t)(unsigned char) buffer[offset + 2] << 8) |
+                    ((u_int32_t)(unsigned char) buffer[offset + 3]);
+        offset += 4;
+    }
 }

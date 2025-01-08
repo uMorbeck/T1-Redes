@@ -1,10 +1,12 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <time.h>
 
 // Structure of NTP Packet
 typedef struct {
@@ -26,7 +28,7 @@ typedef struct {
 } ntp_packet;
 
 void print_ntp_time(ntp_packet *packet);
-// void serialize_ntp_packet(ntp_packet *packet, uint8_t *buffer);
 void juntate_sntp_packet(ntp_packet *packet, char *buffer);
+void unjuntate_sntp_packet(ntp_packet *packet, char *buffer);
 
 #endif

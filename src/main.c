@@ -1,7 +1,4 @@
 #include "../inc/main.h"
-#define PORT 123
-#define MAX_SIZE_BUFFER 48
-#define TIMEOUT 20
 
 int main(int argc, char *argv[]) {
     if (argc < 2){
@@ -54,10 +51,12 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < bytes_recebidos; i++) {
         printf("%02X ", (unsigned char) buffer[i]);
     }
-    printf("\n");
+    printf("\n\n");
+
+    unjuntate_sntp_packet(&packet, buffer);
 
     // Exibe a data/hora
-    // print_ntp_time(&packet);
+    print_ntp_time(&packet);
     
     // Fechar o socket
     close(socket_client);
