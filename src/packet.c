@@ -3,13 +3,131 @@
 // Converts and show the time, based on the transmitted timestam (txTm_s) in the packet
 void print_ntp_time(ntp_packet *packet) {
     // Converts to big-endian
-    uint32_t txTm_s = ntohl(packet->txTm_s);  
+    uint32_t txTm_s = packet->txTm_s;  
     //  Adjusts Epoch NTP to UNIX 
-    time_t time_val = (time_t)(txTm_s - 2208988800U); 
+    time_t time_val = (time_t)(txTm_s - 2208988800UL); 
 
     // Converts to time structure
-    struct tm *time_info = gmtime(&time_val); 
-    printf("Data/hora: %s", asctime(time_info));
+    struct tm *time_info = localtime(&time_val); 
+    char *tempo = asctime(time_info);
+    int day;
+ 
+    if (tempo[0] == 'S' && tempo[1] == 'u') {
+        day = 1;
+    } else if (tempo[0] == 'M') {
+        day = 2;
+    } else if (tempo[0] == 'T' && tempo[1] == 'u') {
+        day = 3;
+    } else if (tempo[0] == 'W') {
+        day = 4;
+    } else if (tempo[0] == 'T' && tempo[1] == 'h') {
+        day = 5;
+    } else if (tempo[0] == 'F') {
+        day = 6;
+    } else if (tempo[0] == 'S' && tempo[1] == 'a') {
+        day = 7;
+    }
+
+    switch (day) {
+        case 1:
+            tempo[0] = 'D';
+            tempo[1] = 'o';
+            tempo[2] = 'm';
+            break;
+        case 2: 
+            tempo[0] = 'S';
+            tempo[1] = 'e';
+            tempo[2] = 'g';
+            break;
+        case 3:
+            tempo[0] = 'T';
+            tempo[1] = 'e';
+            tempo[2] = 'r';
+            break;
+        case 4:
+            tempo[0] = 'Q';
+            tempo[1] = 'u';
+            tempo[2] = 'a';
+            break;
+        case 5:
+            tempo[0] = 'Q';
+            tempo[1] = 'u';
+            tempo[2] = 'i';
+            break;
+        case 6:
+            tempo[0] = 'S';
+            tempo[1] = 'e';
+            tempo[2] = 'x';
+            break;
+        case 7:
+            tempo[0] = 'S';
+            tempo[1] = 'a';
+            tempo[2] = 'b';
+            break;
+        default:
+            break;
+    }
+
+    int mes;
+
+    if (tempo[4] == 'F') {
+        mes = 2;
+    } else if (tempo[4] == 'A' && tempo[5] == 'p') {
+        mes = 4;
+    } else if (tempo[4] == 'M') {
+        mes = 5;
+    } else if (tempo[4] == 'A' && tempo[5] == 'u') {
+        mes = 8;
+    } else if (tempo[4] == 'S') {
+        mes = 9;
+    } else if (tempo[4] == 'O') {
+        mes = 10;
+    } else if (tempo[4] == 'D') {
+        mes = 12;
+    }
+
+
+    switch (mes) {
+        case 2:
+            tempo[0] = 'F';
+            tempo[1] = 'e';
+            tempo[2] = 'v';
+            break;
+        case 4: 
+            tempo[0] = 'A';
+            tempo[1] = 'b';
+            tempo[2] = 'r';
+            break;
+        case 5:
+            tempo[0] = 'M';
+            tempo[1] = 'a';
+            tempo[2] = 'i';
+            break;
+        case 8:
+            tempo[0] = 'A';
+            tempo[1] = 'g';
+            tempo[2] = 'o';
+            break;
+        case 9:
+            tempo[0] = 'S';
+            tempo[1] = 'e';
+            tempo[2] = 't';
+            break;
+        case 10:
+            tempo[0] = 'O';
+            tempo[1] = 'u';
+            tempo[2] = 't';
+            break;
+        case 12:
+            tempo[0] = 'D';
+            tempo[1] = 'e';
+            tempo[2] = 'z';
+            break;
+        default:
+            break;
+    }
+
+    printf("Data/hora: %s", tempo);
 }
 
 void juntate_sntp_packet(ntp_packet *packet, char *buffer) {
