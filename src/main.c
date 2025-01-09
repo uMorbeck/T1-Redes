@@ -6,10 +6,13 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    // Criando Variáveis
     int socket_client = -1;
     struct sockaddr_in addr_server;
     socklen_t struct_addrlen = sizeof(addr_server);
     char buffer[MAX_SIZE_BUFFER] = {0};
+    struct timeval timeout;
+    
 
     // Inicializa o pacote NTP
     ntp_packet packet = {0};
@@ -29,6 +32,15 @@ int main(int argc, char *argv[]) {
     addr_server.sin_port = htons(PORT);
     addr_server.sin_addr.s_addr = inet_addr(argv[1]);
 
+    timeout.tv_sec = TIMEOUT;
+    timeout.tv_usec = 0;
+    
+    if (setsockopt(socket_client, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
+        printf("Erro ao setar o timeout\n");
+        close(socket_client);
+        return -1;
+    }
+
     // Stringificando o Pacote
     juntate_sntp_packet(&packet, buffer);
 
@@ -43,8 +55,16 @@ int main(int argc, char *argv[]) {
     // Recebe a resposta do servidor
     int bytes_recebidos = recvfrom(socket_client, buffer, sizeof(buffer), 0, (struct sockaddr*) &addr_server, &struct_addrlen);
     if (bytes_recebidos < 0){
-        printf("Erro ao receber resposta do Servidor\n");
-        return -1;
+        if (sendto(socket_client, buffer, MAX_SIZE_BUFFER, 0, (struct sockaddr*) &addr_server, struct_addrlen) < 0) {
+            printf("Erro ao enviar\n");
+            return -1;
+        }
+        bytes_recebidos = recvfrom(socket_client, buffer, sizeof(buffer), 0, (struct sockaddr*) &addr_server, &struct_addrlen);
+        if (bytes_recebidos < 0) {
+            printf("Data/hora: não foi possível contactar servidor\n");
+            close(socket_client);
+            return -1;
+        }
     }
     
     printf("Resposta do Servidor:\n");
