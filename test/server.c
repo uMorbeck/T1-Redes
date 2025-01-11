@@ -4,11 +4,13 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+#define MAX_SIZE_BUFFER 48
+
 int main(void){
     int socket_desc;
     struct sockaddr_in server_addr, client_addr;
     char server_message[100] = "Recebido...";
-    char client_message[2000];
+    char client_message[100];
     int client_struct_length = sizeof(client_addr);
     
     // Clean buffers:
@@ -38,14 +40,20 @@ int main(void){
     printf("Listening for incoming messages...\n\n");
     
     // Receive client's message:
-    if (recvfrom(socket_desc, client_message, sizeof(client_message), 0, (struct sockaddr*)&client_addr, &client_struct_length) < 0){
+    int recv_msg = recvfrom(socket_desc, client_message, sizeof(client_message), 0, (struct sockaddr*)&client_addr, &client_struct_length);
+    if (recv_msg < 0){
         printf("Couldn't receive\n");
         return -1;
     }
     printf("Received message from IP: %s and port: %i\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     
-    printf("Msg from client: %s\n", client_message);
-    
+    printf("Size of Msg: %d\n", recv_msg);
+
+    for (int i = 0; i < recv_msg; i++) {
+        printf("%02X ", (unsigned char)client_message[i]);
+    }
+    printf("\n");
+
     // Respond to client:
     
     if (sendto(socket_desc, server_message, strlen(server_message), 0, (struct sockaddr*)&client_addr, client_struct_length) < 0){
