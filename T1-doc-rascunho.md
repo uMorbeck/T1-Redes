@@ -1,5 +1,5 @@
 # **FUNDAMENTOS DE REDES DE COMPUTADORES - 2024/2**
-## **Trabalho 1: SNTP**
+### **Trabalho 1: SNTP**
 #### Professor: Tiago Alves da Fonseca
 #### Grupo: João Pedro Rodrigues Morbeck (202063300), Pedro Henrique da Silva Melo (211039662), Rodrigo de Andrade Lima Orlandi (202017129)
 
