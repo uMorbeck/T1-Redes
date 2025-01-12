@@ -45,6 +45,7 @@ int main(int argc, char *argv[]) {
     juntate_sntp_packet(&packet, buffer);
 
     // Envia para o servidor
+    printf("Enviando Requisição para %s\n", argv[1]);
     if (sendto(socket_client, buffer, MAX_SIZE_BUFFER, 0, (struct sockaddr*) &addr_server, struct_addrlen) < 0) {
         printf("Erro ao enviar\n");
         return -1;
@@ -55,13 +56,14 @@ int main(int argc, char *argv[]) {
     // Recebe a resposta do servidor
     int bytes_recebidos = recvfrom(socket_client, buffer, sizeof(buffer), 0, (struct sockaddr*) &addr_server, &struct_addrlen);
     if (bytes_recebidos < 0){
+        printf("Timeout da Requisição, Tentando Novamente...\n");
         if (sendto(socket_client, buffer, MAX_SIZE_BUFFER, 0, (struct sockaddr*) &addr_server, struct_addrlen) < 0) {
             printf("Erro ao enviar\n");
             return -1;
         }
         bytes_recebidos = recvfrom(socket_client, buffer, sizeof(buffer), 0, (struct sockaddr*) &addr_server, &struct_addrlen);
         if (bytes_recebidos < 0) {
-            printf("Data/hora: não foi possível contactar servidor\n");
+            printf("\nData/hora: não foi possível contactar servidor\n");
             close(socket_client);
             return -1;
         }
